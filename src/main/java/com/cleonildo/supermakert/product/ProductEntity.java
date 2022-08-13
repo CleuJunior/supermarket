@@ -1,6 +1,5 @@
 package com.cleonildo.supermakert.product;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.UUID;
+import java.time.Instant;
 
 @Entity
 @Data
@@ -25,9 +24,8 @@ public class ProductEntity implements Serializable {
 
     @Id
     @Column(name = "_id", nullable = false)
-    @JsonProperty("_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private Long id;
 
     @Column(name = "product_name", nullable = false)
     private String name;
@@ -40,5 +38,11 @@ public class ProductEntity implements Serializable {
 
     @Column(name = "product_definition", columnDefinition="TEXT")
     private String definition;
+
+    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant createdAt;
+
+    @Column(name = "edited_at", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant editedAt;
 
 }
