@@ -1,8 +1,10 @@
 package com.cleonildo.supermakert.product;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,9 +16,8 @@ import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
-@Data
+@EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
 public class ProductEntity implements Serializable {
 
     @Serial
@@ -25,24 +26,44 @@ public class ProductEntity implements Serializable {
     @Id
     @Column(name = "_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
+    @Setter
     private Long id;
 
     @Column(name = "product_name", nullable = false)
+    @Getter
+    @Setter
     private String name;
 
     @Column(name = "product_price", nullable = false)
+    @Getter
+    @Setter
     private Double price;
 
     @Column(name = "product_quantity", nullable = false)
+    @Getter
+    @Setter
     private Integer quantity;
 
     @Column(name = "product_definition", columnDefinition="TEXT")
+    @Getter
+    @Setter
     private String definition;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    @Getter
     private Instant createdAt;
 
     @Column(name = "edited_at", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    @Getter
     private Instant editedAt;
 
+    public ProductEntity(String name, Double price, Integer quantity, String definition) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.definition = definition;
+        this.createdAt = Instant.now();
+        this.editedAt = Instant.now();
+    }
 }

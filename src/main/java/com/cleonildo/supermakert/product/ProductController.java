@@ -6,39 +6,39 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "/api/products")
+@RequestMapping(value = "/api/product")
 public class ProductController {
     private final ProductService productService;
-    private final ModelMapper modelMapper;
 
     @GetMapping("/list")
     public ResponseEntity<List<ProductDetails>> getListProduct() {
-        List<ProductDetails> listProductsSummary = this.productService.getListProduct()
-                .stream()
-                .map(this::convertToDTO)
-                .toList();
-
-       return ResponseEntity.ok(listProductsSummary);
+       return ResponseEntity.ok(this.productService.getListProduct());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDetails> getProductById(@PathVariable Long id) {
-        ProductDetails productSummary = convertToDTO(this.productService.getProductById(id));
-
-        return ResponseEntity.ok(productSummary);
+        return ResponseEntity.ok(this.productService.getProductById(id));
     }
 
     @PostMapping("/create")
+    public ResponseEntity<ProductDetails> createProduct(@RequestBody ProductDetails productBody) {
+        this.productService.saveProduct(productBody);
 
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(productBody.getId()).toUri();
 
-    private ProductDetails convertToDTO(ProductEntity productEntity) {
-        return this.modelMapper.map(productEntity, ProductDetails.class);
+        return ResponseEntity.created(uri).body(productBody);
     }
 }
