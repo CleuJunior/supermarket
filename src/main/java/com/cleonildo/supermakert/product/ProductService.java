@@ -29,21 +29,30 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public void saveProduct(ProductDetails productDetails) {
+    public ProductSummary saveProduct(ProductSummary productDetails) {
         ProductEntity productEntity = this.modelMapper.map(productDetails, ProductEntity.class);
-        this.productRepository.saveAndFlush(productEntity);
+
+        return this.modelToSummary(this.productRepository.saveAndFlush(productEntity));
     }
 
-//    @Transactional(readOnly = true)
-//    public void saveProduct(ProductEntity productEntity) {
-//        this.productRepository.save(productEntity);
-//    }
+    @Transactional
+    public ProductDetails updateProduct(Long id, ProductDetails productDetailsBody) {
+        ProductEntity productEntity = this.productRepository.findById(id).orElse(null);
+        productEntity.setEditedAt();
+        this.modelMapper.map(productDetailsBody, productEntity);
+
+        return this.modelToDetails(this.productRepository.saveAndFlush(productEntity));
+    }
 
     private ProductDetails modelToDetails(ProductEntity productEntity) {
         return this.modelMapper.map(productEntity, ProductDetails.class);
     }
 
-    private ProductEntity detailsToModel(ProductDetails productDetails) {
+    private ProductSummary modelToSummary(ProductEntity productEntity) {
+        return this.modelMapper.map(productEntity, ProductSummary.class);
+    }
+
+    private ProductEntity detailsToModel(ProductSummary productDetails) {
         return this.modelMapper.map(productDetails, ProductEntity.class);
     }
 }

@@ -1,11 +1,11 @@
 package com.cleonildo.supermakert.product;
 
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,18 +30,22 @@ public class ProductController {
         return ResponseEntity.ok(this.productService.getProductById(id));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<ProductDetails> createProduct(@RequestBody ProductDetails productBody) {
-        this.productService.saveProduct(productBody);
+    @PutMapping(value = "/update/{id}")
+    public ResponseEntity<ProductDetails> getBookById (@PathVariable Long id, @RequestBody ProductDetails productDetails) {
+        return ResponseEntity.ok().body(this.productService.updateProduct(id, productDetails));
 
-
-
-//        URI uri = ServletUriComponentsBuilder
-//                .fromCurrentRequest()
-//                .path("/{id}")
-//                .buildAndExpand(productBody.getId()).toUri();
-
-//        return ResponseEntity.created(uri).body(productBody);
-        return ResponseEntity.ok(productBody);
     }
+
+    @PostMapping("/create")
+    public ResponseEntity<ProductSummary> createProduct(@RequestBody ProductSummary productBody) {
+        ProductSummary productDetails = this.productService.saveProduct(productBody);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(productDetails.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(productDetails);
+    }
+
 }
