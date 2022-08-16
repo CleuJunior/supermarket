@@ -34,11 +34,14 @@ public class ProductController {
     public ResponseEntity<ProductDetails> createProduct(@RequestBody ProductDetails productBody) {
         this.productService.saveProduct(productBody);
 
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(productBody.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(productBody);
+
+//        URI uri = ServletUriComponentsBuilder
+//                .fromCurrentRequest()
+//                .path("/{id}")
+//                .buildAndExpand(productBody.getId()).toUri();
+
+//        return ResponseEntity.created(uri).body(productBody);
+        return ResponseEntity.ok(productBody);
     }
 }

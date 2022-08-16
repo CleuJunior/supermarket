@@ -25,14 +25,19 @@ public class ProductService {
     public ProductDetails getProductById(Long id) {
         ProductEntity productEntity = this.productRepository.findById(id).orElse(null);
 
-        return modelToDetails(productEntity);
+        return this.modelToDetails(productEntity);
     }
 
     @Transactional(readOnly = true)
     public void saveProduct(ProductDetails productDetails) {
-        this.productRepository.saveAndFlush(detailsToModel(productDetails));
-
+        ProductEntity productEntity = this.modelMapper.map(productDetails, ProductEntity.class);
+        this.productRepository.saveAndFlush(productEntity);
     }
+
+//    @Transactional(readOnly = true)
+//    public void saveProduct(ProductEntity productEntity) {
+//        this.productRepository.save(productEntity);
+//    }
 
     private ProductDetails modelToDetails(ProductEntity productEntity) {
         return this.modelMapper.map(productEntity, ProductDetails.class);
