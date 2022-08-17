@@ -42,11 +42,19 @@ public class ProductService {
     @Transactional
     public ProductDetails updateProduct(Long id, ProductDetails productDetailsBody) {
         ProductEntity productEntity = this.productRepository.findById(id).orElse(null);
-        productEntity.setEditedAt();
-        this.productRepository.saveAndFlush(productEntity);
-        return detailsToModel(productDetailsBody, productEntity);
 
-        return this.modelToDetails(this.productRepository.saveAndFlush(productEntity));
+
+        productEntity.setName(productDetailsBody.getName());
+        productEntity.setPrice(productDetailsBody.getPrice());
+        productEntity.setQuantity(productDetailsBody.getQuantity());
+        productEntity.setDefinition(productDetailsBody.getDefinition());
+
+//        productEntity = detailToModel(productDetailsBody);
+        productEntity.setEditedAt();
+
+        this.productRepository.saveAndFlush(productEntity);
+
+        return this.modelToDetails(productEntity);
     }
 
     private ProductDetails modelToDetails(ProductEntity productEntity) {
@@ -57,7 +65,8 @@ public class ProductService {
         return this.modelMapper.map(productEntity, ProductSummary.class);
     }
 
-    private ProductEntity detailsToModel(ProductSummary productDetails) {
+    private ProductEntity detailToModel(ProductDetails productDetails) {
         return this.modelMapper.map(productDetails, ProductEntity.class);
     }
+
 }
