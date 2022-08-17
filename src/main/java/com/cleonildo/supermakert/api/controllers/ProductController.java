@@ -1,5 +1,8 @@
-package com.cleonildo.supermakert.product;
+package com.cleonildo.supermakert.api.controllers;
 
+import com.cleonildo.supermakert.api.mapper.ProductDetails;
+import com.cleonildo.supermakert.domain.services.ProductService;
+import com.cleonildo.supermakert.api.mapper.ProductSummary;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

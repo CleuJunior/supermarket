@@ -1,12 +1,14 @@
-package com.cleonildo.supermakert.product;
+package com.cleonildo.supermakert.api.mapper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Getter
 @Setter
-public class ProductSummary {
+public class ProductDetails {
 
     @JsonProperty("product_id")
     private Long id;
@@ -22,4 +24,10 @@ public class ProductSummary {
 
     @JsonProperty("product_definition")
     private String definition;
+
+    @JsonProperty("created_at")
+    private Instant createdAt;
+
+    @JsonProperty("edited_at")
+    private Instant editedAt;
 }

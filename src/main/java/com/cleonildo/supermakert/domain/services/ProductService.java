@@ -1,5 +1,9 @@
-package com.cleonildo.supermakert.product;
+package com.cleonildo.supermakert.domain.services;
 
+import com.cleonildo.supermakert.domain.entities.ProductEntity;
+import com.cleonildo.supermakert.api.mapper.ProductDetails;
+import com.cleonildo.supermakert.api.mapper.ProductSummary;
+import com.cleonildo.supermakert.domain.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -39,7 +43,8 @@ public class ProductService {
     public ProductDetails updateProduct(Long id, ProductDetails productDetailsBody) {
         ProductEntity productEntity = this.productRepository.findById(id).orElse(null);
         productEntity.setEditedAt();
-        this.modelMapper.map(productDetailsBody, productEntity);
+        this.productRepository.saveAndFlush(productEntity);
+        return detailsToModel(productDetailsBody, productEntity);
 
         return this.modelToDetails(this.productRepository.saveAndFlush(productEntity));
     }

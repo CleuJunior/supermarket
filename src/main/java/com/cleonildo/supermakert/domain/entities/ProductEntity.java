@@ -1,4 +1,4 @@
-package com.cleonildo.supermakert.product;
+package com.cleonildo.supermakert.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
