@@ -21,7 +21,7 @@ public class ProductService {
     public List<ProductDetails> getListProduct() {
         return this.productRepository.findAll()
                 .stream()
-                .map(this::modelToDetails)
+                .map(pdc -> this.modelMapper.map(pdc, ProductDetails.class))
                 .toList();
     }
 
@@ -29,44 +29,25 @@ public class ProductService {
     public ProductDetails getProductById(Long id) {
         ProductEntity productEntity = this.productRepository.findById(id).orElse(null);
 
-        return this.modelToDetails(productEntity);
+        return this.modelMapper.map(productEntity, ProductDetails.class);
     }
 
     @Transactional(readOnly = true)
-    public ProductSummary saveProduct(ProductSummary productDetails) {
-        ProductEntity productEntity = this.modelMapper.map(productDetails, ProductEntity.class);
+    public ProductSummary saveProduct(ProductSummary productSummary) {
+        ProductEntity productEntity = this.modelMapper.map(productSummary, ProductEntity.class);
+        this.productRepository.saveAndFlush(productEntity);
 
-        return this.modelToSummary(this.productRepository.saveAndFlush(productEntity));
+        return this.modelMapper.map(productEntity, ProductSummary.class);
     }
 
     @Transactional
     public ProductDetails updateProduct(Long id, ProductDetails productDetailsBody) {
         ProductEntity productEntity = this.productRepository.findById(id).orElse(null);
 
-
-        productEntity.setName(productDetailsBody.getName());
-        productEntity.setPrice(productDetailsBody.getPrice());
-        productEntity.setQuantity(productDetailsBody.getQuantity());
-        productEntity.setDefinition(productDetailsBody.getDefinition());
-
-//        productEntity = detailToModel(productDetailsBody);
+        productDetailsBody.setId(id);
+        this.productRepository.saveAndFlush(this.modelMapper.map(productDetailsBody, ProductEntity.class));
         productEntity.setEditedAt();
 
-        this.productRepository.saveAndFlush(productEntity);
-
-        return this.modelToDetails(productEntity);
-    }
-
-    private ProductDetails modelToDetails(ProductEntity productEntity) {
         return this.modelMapper.map(productEntity, ProductDetails.class);
     }
-
-    private ProductSummary modelToSummary(ProductEntity productEntity) {
-        return this.modelMapper.map(productEntity, ProductSummary.class);
-    }
-
-    private ProductEntity detailToModel(ProductDetails productDetails) {
-        return this.modelMapper.map(productDetails, ProductEntity.class);
-    }
-
 }
