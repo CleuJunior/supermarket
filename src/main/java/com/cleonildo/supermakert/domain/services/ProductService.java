@@ -50,4 +50,8 @@ public class ProductService {
 
         return this.modelMapper.map(productEntity, ProductDetails.class);
     }
+
+    public void deleteProduct(Long id) {
+        this.productRepository.deleteById(id);
+    }
 }

@@ -5,6 +5,7 @@ import com.cleonildo.supermakert.domain.services.ProductService;
 import com.cleonildo.supermakert.api.mapper.ProductSummary;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,4 +52,9 @@ public class ProductController {
         return ResponseEntity.created(uri).body(productDetails);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        this.productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
 }
